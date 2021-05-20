@@ -1,6 +1,5 @@
 extern crate rand;
 
-use std::cmp::{max, min};
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 use std::thread;
