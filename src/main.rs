@@ -8,13 +8,6 @@ use std::time::Duration;
 
 use rand::Rng;
 
-// fn main() {
-//     let mut rng = rand::thread_rng();
-
-//     let n1: u8 = rng.gen();
-//     let n2: u16 = rng.gen();
-
-// TODO: добавить размышления
 
 fn main() {
     const PHILOSOPHERS_NUMBER: usize = 5;
