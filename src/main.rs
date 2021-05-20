@@ -33,16 +33,13 @@ fn main() {
 
                 // блокируем сет вилок, чтобы узнать, а можно ли перекусить
                 let mut forks_taken = fork_arc.lock().unwrap();
-                if !forks_taken.contains(&current_fork_number)
-                    && !forks_taken.contains(&next_fork_number)
-                {
+                if forks_taken.contains(&current_fork_number)
+                    || forks_taken.contains(&next_fork_number) {
+                    drop(forks_taken);
+                } else {
                     // да, можно кушать!
                     forks_taken.insert(current_fork_number);
-                    println!("Philosopher#{} took fork#{}", n, current_fork_number);
-
                     forks_taken.insert(next_fork_number);
-                    println!("Philosopher#{} took fork#{}", n, next_fork_number);
-
                     // освобождаем блокировку сета вилок
                     drop(forks_taken);
 
@@ -59,8 +56,6 @@ fn main() {
 
                     forks_taken = fork_arc.lock().unwrap();
                     forks_taken.remove(&current_fork_number);
-                    drop(forks_taken);
-                } else {
                     drop(forks_taken);
                 }
                 thread::sleep(Duration::from_secs(1));
