@@ -31,9 +31,6 @@ fn main() {
             let current_fork_number = n;
             let next_fork_number = (n + 1) % PHILOSOPHERS_NUMBER;
 
-            let fork_to_take_first = min(current_fork_number, next_fork_number);
-            let fork_to_take_last = max(current_fork_number, next_fork_number);
-
             // let mut rng = rand::thread_rng();
 
             loop {
@@ -43,15 +40,15 @@ fn main() {
 
                 // блокируем сет вилок, чтобы узнать, а можно ли перекусить
                 let mut forks_taken = fork_arc.lock().unwrap();
-                if !forks_taken.contains(&fork_to_take_first)
-                    && !forks_taken.contains(&fork_to_take_last)
+                if !forks_taken.contains(&current_fork_number)
+                    && !forks_taken.contains(&next_fork_number)
                 {
                     // да, можно кушать!
-                    forks_taken.insert(fork_to_take_first);
-                    println!("Philosopher#{} took fork#{}", n, fork_to_take_first);
+                    forks_taken.insert(current_fork_number);
+                    println!("Philosopher#{} took fork#{}", n, current_fork_number);
 
-                    forks_taken.insert(fork_to_take_last);
-                    println!("Philosopher#{} took fork#{}", n, fork_to_take_last);
+                    forks_taken.insert(next_fork_number);
+                    println!("Philosopher#{} took fork#{}", n, next_fork_number);
 
                     // освобождаем блокировку сета вилок
                     drop(forks_taken);
@@ -64,11 +61,11 @@ fn main() {
 
                     // снова блокируем сет вилок
                     forks_taken = fork_arc.lock().unwrap();
-                    forks_taken.remove(&fork_to_take_last);
+                    forks_taken.remove(&next_fork_number);
                     drop(forks_taken);
 
                     forks_taken = fork_arc.lock().unwrap();
-                    forks_taken.remove(&fork_to_take_first);
+                    forks_taken.remove(&current_fork_number);
                     drop(forks_taken);
                 } else {
                     drop(forks_taken);
