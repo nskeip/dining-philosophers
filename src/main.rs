@@ -33,12 +33,13 @@ fn main() {
 
             let fork_to_take_first = min(current_fork_number, next_fork_number);
             let fork_to_take_last = max(current_fork_number, next_fork_number);
-            
-            let mut rng = rand::thread_rng();
 
-            loop { // цикл раздумий и еды...
-                println!("Philosopher#{} is thinking...", n);
-                thread::sleep(Duration::from_secs(rng.gen_range(0, MAX_SECONDS_TO_THINK) as u64));
+            // let mut rng = rand::thread_rng();
+
+            loop {
+                // цикл раздумий и еды...
+                // println!("Philosopher#{} is thinking...", n);
+                // thread::sleep(Duration::from_secs(rng.gen_range(0, MAX_SECONDS_TO_THINK) as u64));
 
                 // блокируем сет вилок, чтобы узнать, а можно ли перекусить
                 let mut forks_taken = fork_arc.lock().unwrap();
@@ -57,12 +58,20 @@ fn main() {
 
                     // едим...
                     println!("Philosopher#{} is eating.", n);
-                    thread::sleep(Duration::from_secs(rng.gen_range(0, MAX_SECONDS_TO_EAT) as u64));
+                    // thread::sleep(Duration::from_secs(
+                    //     rng.gen_range(0, MAX_SECONDS_TO_EAT) as u64
+                    // ));
 
                     // снова блокируем сет вилок
                     forks_taken = fork_arc.lock().unwrap();
                     forks_taken.remove(&fork_to_take_last);
+                    drop(forks_taken);
+
+                    forks_taken = fork_arc.lock().unwrap();
                     forks_taken.remove(&fork_to_take_first);
+                    drop(forks_taken);
+                } else {
+                    drop(forks_taken);
                 }
                 thread::sleep(Duration::from_secs(1));
             }
