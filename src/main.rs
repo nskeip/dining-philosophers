@@ -31,12 +31,12 @@ fn main() {
             let current_fork_number = n;
             let next_fork_number = (n + 1) % PHILOSOPHERS_NUMBER;
 
-            // let mut rng = rand::thread_rng();
+            let mut rng = rand::thread_rng();
 
             loop {
                 // цикл раздумий и еды...
-                // println!("Philosopher#{} is thinking...", n);
-                // thread::sleep(Duration::from_secs(rng.gen_range(0, MAX_SECONDS_TO_THINK) as u64));
+                println!("Philosopher#{} is thinking...", n);
+                thread::sleep(Duration::from_secs(rng.gen_range(0, MAX_SECONDS_TO_THINK) as u64));
 
                 // блокируем сет вилок, чтобы узнать, а можно ли перекусить
                 let mut forks_taken = fork_arc.lock().unwrap();
@@ -55,9 +55,9 @@ fn main() {
 
                     // едим...
                     println!("Philosopher#{} is eating.", n);
-                    // thread::sleep(Duration::from_secs(
-                    //     rng.gen_range(0, MAX_SECONDS_TO_EAT) as u64
-                    // ));
+                    thread::sleep(Duration::from_secs(
+                        rng.gen_range(0, MAX_SECONDS_TO_EAT) as u64
+                    ));
 
                     // снова блокируем сет вилок
                     forks_taken = fork_arc.lock().unwrap();
